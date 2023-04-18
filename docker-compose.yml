@@ -1,0 +1,54 @@
+version: "3.9"
+services:
+    app:
+        build: .
+        ports: 
+            - "5000:5000"
+        networks:
+            - games-net
+        environment:
+            MYSQL_HOST: db
+            MYSQL_PORT: 3306
+            MYSQL_USER: admin
+            MYSQL_PASSWORD: password
+            MYSQL_DATABASE: test_db
+            MYSQL_ROOT_PASSWORD: password
+    db:
+        image: mysql
+        ports:
+            - 3306:3306
+        command: --default-authentication-plugin=mysql_native_password
+        restart: always
+        environment:
+            MYSQL_USER: admin
+            MYSQL_PASSWORD: password
+            MYSQL_DATABASE: test_db
+            MYSQL_ROOT_PASSWORD: password
+        volumes: 
+            - ./init:/docker-entrypoint-initdb.d
+        networks:
+            - games-net
+            
+    # for php myadmin goto http://localhost:8080
+    db_admin:
+        image: phpmyadmin/phpmyadmin
+        ports:
+            - 8080:80
+        restart: "on-failure"
+        depends_on:
+            - db
+        links:
+            - db
+        environment:
+            PMA_HOST: db
+            PMA_PORT: 3306
+            PMA_USER: admin
+            PMA_PASSWORD: password
+        networks:
+            - games-net
+
+networks:
+    games-net:
+
+volumes:
+    test_db:
