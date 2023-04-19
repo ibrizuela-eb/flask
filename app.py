@@ -1,12 +1,7 @@
 from flask import Flask, jsonify, request, redirect, render_template
 
-from repository.db_connector import (
-    delete_game,
-    get_games,
-    get_game_by_id,
-    insert_game,
-    update_game,
-)
+from repository.database import get_connection
+from repository.game_repository import GameRepository
 
 
 app = Flask("Games")
@@ -19,13 +14,13 @@ def home():
 
 @app.route("/games/<int:id>")
 def game_by_id(id):
-    games = [get_game_by_id(id)]
+    games = [GameRepository(get_connection()).get_game_by_id(id)]
     return jsonify(games=games), 200
 
 
 @app.route("/games")
 def games():
-    games = get_games()
+    games = GameRepository(get_connection()).get_games()
     return jsonify(games=games), 200
 
 
@@ -35,15 +30,14 @@ def save_game():
     name = data["name"]
     description = data["description"]
     price = float(data["price"])
-    insert_game(name, description, price)
+    GameRepository(get_connection()).insert_game(name, description, price)
     return redirect("/games")
-
 
 
 @app.route("/update_game/<int:id>", methods=["PUT"])
 def update(id):
     data = request.get_json()
-    update_game(
+    GameRepository(get_connection()).update_game(
         id=id,
         name=data["name"],
         description=data["description"],
@@ -54,7 +48,7 @@ def update(id):
 
 @app.route("/delete_game", methods=["POST"])
 def delete_game():
-    delete_game(data["id"])
+    GameRepository(get_connection()).delete_game(data["id"])
     return redirect("/games")
 
 
