@@ -65,7 +65,7 @@ The allowed methods are:
  ```
  - DELETE -> `/delete_game/<id>`
  ```json
- [DELETE] /update_game/2
+ [DELETE] /delete_game/2
  ```
 
 # Dependencies
@@ -114,7 +114,7 @@ There is an admin panel running in the 8080 PORT.
 2. Select `test-db` on the left pannel
 3. Select the `SQL` tab
 4. Paste and run the following sentence
-```
+```SQL
 CREATE TABLE games(
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,

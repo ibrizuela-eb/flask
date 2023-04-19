@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Export MySQL credentials
-export HOST=localhost
-export DB_NAME=dev
-export DB_USER=user
-export DB_PASSWORD=root
+export DB_DATABASE=test_db
+export DB_USER=admin
+export DB_PASSWORD=password
